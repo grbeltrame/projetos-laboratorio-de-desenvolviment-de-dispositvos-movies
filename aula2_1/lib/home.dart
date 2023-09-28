@@ -10,6 +10,9 @@ class HomeState extends StatefulWidget {
 
 class _HomeStateState extends State<HomeState> {
   String img = "images/default.png";
+  int contEmp = 0;
+  int contVit = 0;
+  int contDer = 0;
   List<String> jogadas = [
     "images/tesoura.png",
     "images/papel.png",
@@ -18,23 +21,31 @@ class _HomeStateState extends State<HomeState> {
   String text = "";
   void _play(name) {
     int i = Random().nextInt(jogadas.length);
-    if (jogadas[i] == "images/$name.png") {
-      text = "Empate!";
-    } else if (jogadas[i] == "images/tesoura.png" && name == "papel") {
-      text = "Você perdeu";
-    } else if (jogadas[i] == "images/tesoura.png" && name == "pedra") {
-      text = "Você ganhou";
-    } else if (jogadas[i] == "images/pedra.png" && name == "papel") {
-      text = "Você ganhou";
-    } else if (jogadas[i] == "images/pedra.png" && name == "tesoura") {
-      text = "Você perdeu";
-    } else if (jogadas[i] == "images/papel.png" && name == "pedra") {
-      text = "Você perdeu";
-    } else if (jogadas[i] == "images/papel.png" && name == "tesoura") {
-      text = "Você ganhou";
-    }
+    img = jogadas[i];
+
     setState(() {
-      img = jogadas[i];
+      if (jogadas[i] == "images/$name.png") {
+        text = "Empate!";
+        contEmp++;
+      } else if (jogadas[i] == "images/tesoura.png" && name == "papel") {
+        text = "Você perdeu";
+        contDer++;
+      } else if (jogadas[i] == "images/tesoura.png" && name == "pedra") {
+        text = "Você ganhou";
+        contVit++;
+      } else if (jogadas[i] == "images/pedra.png" && name == "papel") {
+        text = "Você ganhou";
+        contVit++;
+      } else if (jogadas[i] == "images/pedra.png" && name == "tesoura") {
+        text = "Você perdeu";
+        contDer++;
+      } else if (jogadas[i] == "images/papel.png" && name == "pedra") {
+        text = "Você perdeu";
+        contDer++;
+      } else if (jogadas[i] == "images/papel.png" && name == "tesoura") {
+        text = "Você ganhou";
+        contVit++;
+      }
     });
   }
 
@@ -49,7 +60,7 @@ class _HomeStateState extends State<HomeState> {
         children: [
           Image.asset(
             img,
-            height: 200,
+            height: 150,
           ),
           Text("Escolha uma ação:",
               style: TextStyle(
@@ -62,7 +73,7 @@ class _HomeStateState extends State<HomeState> {
               GestureDetector(
                 child: Image.asset(
                   "images/tesoura.png",
-                  height: 200,
+                  height: 100,
                 ),
                 onTap: () {
                   _play("tesoura");
@@ -71,7 +82,7 @@ class _HomeStateState extends State<HomeState> {
               GestureDetector(
                 child: Image.asset(
                   "images/papel.png",
-                  height: 200,
+                  height: 100,
                 ),
                 onTap: () {
                   _play("papel");
@@ -80,7 +91,7 @@ class _HomeStateState extends State<HomeState> {
               GestureDetector(
                 child: Image.asset(
                   "images/pedra.png",
-                  height: 200,
+                  height: 100,
                 ),
                 onTap: () {
                   _play("pedra");
@@ -90,9 +101,35 @@ class _HomeStateState extends State<HomeState> {
           ),
           Text(text,
               style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.black)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                "Empates: $contEmp",
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.amber[600]),
+              ),
+              Text(
+                "Derrotas: $contDer",
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent[700]),
+              ),
+              Text(
+                "Vitorias: $contVit",
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.greenAccent[700]),
+              )
+            ],
+          )
         ],
       )),
     );
