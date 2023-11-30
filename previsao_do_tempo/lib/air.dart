@@ -6,9 +6,10 @@ class Air extends StatefulWidget {
   final double latitude;
   final double longitude;
 
-  Air({required this.latitude, required this.longitude});
+  const Air({super.key, required this.latitude, required this.longitude});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AirState createState() => _AirState();
 }
 
@@ -39,7 +40,7 @@ class _AirState extends State<Air> {
 
   Future<Map<String, dynamic>> fetchAirQualityData(
       double lat, double lon) async {
-    final apiKey = 'd44784d89d733750351e5697021a0d65';
+    const apiKey = 'd44784d89d733750351e5697021a0d65';
     final url =
         'https://api.openweathermap.org/data/2.5/air_pollution?lat=$lat&lon=$lon&appid=$apiKey'; // Substitua pela sua API Key
     final response = await http.get(Uri.parse(url));
@@ -55,7 +56,7 @@ class _AirState extends State<Air> {
     try {
       if (widget.latitude != null && widget.longitude != null) {
         final data =
-            await fetchAirQualityData(widget.latitude!, widget.longitude!);
+            await fetchAirQualityData(widget.latitude, widget.longitude);
         setState(() {
           airQualityData = data;
         });
@@ -70,27 +71,27 @@ class _AirState extends State<Air> {
     return Scaffold(
       backgroundColor: Colors.blue[50],
       appBar: AppBar(
-        title: Text('Qualidade do Ar'),
+        title: const Text('Qualidade do Ar'),
       ),
       body: airQualityData == null
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             ) // Feedback de carregamento
           : airQualityData!.isEmpty
-              ? Center(
+              ? const Center(
                   child: Text('Dados de qualidade do ar não disponíveis'),
                 ) // Tratamento de erros
               : Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
+                      const Text(
                         'Índice de Qualidade do Ar:',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         '${airQualityData!['list'][0]['main']['aqi']}',
                         style: TextStyle(
@@ -99,13 +100,13 @@ class _AirState extends State<Air> {
                               airQualityData!['list'][0]['main']['aqi']),
                         ),
                       ),
-                      SizedBox(height: 16),
-                      Text(
+                      const SizedBox(height: 16),
+                      const Text(
                         'Componentes da Qualidade do Ar:',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Column(
                         children: [
                           for (var component
