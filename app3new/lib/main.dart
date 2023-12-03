@@ -35,26 +35,25 @@ class MyAppState extends ChangeNotifier {
     });
   }
 
-  _initDatabase() async {
+  Future<Database> _initDatabase() async {
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, "favorito.db");
 
-    Database db =
-        await openDatabase(path, version: 1, onCreate: (db, version) async {
+    return openDatabase(path, version: 1, onCreate: (db, version) async {
       String sql = """
-            CREATE TABLE favorite( 
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name VARCHAR NOT NULL
-            );
-          """;
+        CREATE TABLE favorite( 
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name VARCHAR NOT NULL
+        );
+      """;
       await db.execute(sql);
     });
-
-    return db;
   }
 
   Future<void> saveFavorite() async {
     final name = current.asPascalCase;
+    final database =
+        await _initDatabase(); // Obtenha a instância do banco de dados
     await database.insert(
       'favorite',
       {'name': name},

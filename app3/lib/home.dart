@@ -87,12 +87,12 @@ class HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        // body: TabBarView(
-        //   children: [
-        //     _buildHomeTab(),
-        //     _buildFavoritesTab(),
-        //   ],
-        // ),
+        body: TabBarView(
+          children: [
+            _buildHomeTab(),
+            _buildFavoritesTab(),
+          ],
+        ),
       ),
     );
   }
@@ -123,29 +123,29 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  // Widget _buildFavoritesTab() {
-  //   return FutureBuilder<List<Map<String, dynamic>>>(
-  //     future: _list(),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.connectionState == ConnectionState.waiting) {
-  //         return CircularProgressIndicator();
-  //       } else if (snapshot.hasError) {
-  //         return Text('Error: ${snapshot.error}');
-  //       } else {
-  //         final favorites =
-  //             snapshot.data ?? []; // Adicionei o operador de nulidade
-  //         return ListView.builder(
-  //           itemCount: favorites.length,
-  //           itemBuilder: (context, index) {
-  //             return ListTile(
-  //               title: Text(favorites[index]['name']),
-  //             );
-  //           },
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
+  Widget _buildFavoritesTab() {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: _list(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          final favorites =
+              snapshot.data ?? []; // Adicionei o operador de nulidade
+          return ListView.builder(
+            itemCount: favorites.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(favorites[index]['name']),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
 
   int _generateRandomIndex() {
     return DateTime.now().millisecondsSinceEpoch % _randomWords.length;
