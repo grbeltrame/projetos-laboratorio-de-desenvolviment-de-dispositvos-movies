@@ -70,25 +70,22 @@ class MyAppState extends ChangeNotifier {
   var favorites = <WordPair>[];
 
   Future<void> loadFavorites() async {
-    final List<Map<String, dynamic>> maps = await database.query('favorite');
-
-    favorites = List.generate(maps.length, (i) {
-      return WordPair(maps[i]['name'], '');
-    });
+    Database db = await _initDatabase();
+    final List<Map<String, dynamic>> maps = await db.query('favorite');
 
     notifyListeners();
   }
 
-  Future<void> toggleFavorite() async {
-    final name = current.asPascalCase;
-    if (favorites.any((pair) => pair.asPascalCase == name)) {
-      favorites.removeWhere((pair) => pair.asPascalCase == name);
-      await database.delete('favorite', where: 'name = ?', whereArgs: [name]);
-    } else {
-      favorites.add(current);
-      await saveFavorite();
-    }
+  Future<void> _deleteById(String name) async {
+    Database db = await _initDatabase();
+    await db.delete('favorite', where: 'name = ?', whereArgs: [name]);
+    // Recarregar a lista de favoritos após a exclusão
     notifyListeners();
+  }
+
+  Future<void> toggleFavorite() async {
+    favorites.add(current);
+    await saveFavorite();
   }
 }
 
@@ -179,7 +176,7 @@ class GeneratorPage extends StatelessWidget {
             children: [
               ElevatedButton.icon(
                 onPressed: () async {
-                  await appState.toggleFavorite();
+                  await appState.saveFavorite();
                 },
                 icon: Icon(icon),
                 label: Text('Like'),
@@ -210,7 +207,7 @@ class BigCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final style = theme.textTheme.headline4!.copyWith(
+    final style = theme.textTheme.headlineMedium!.copyWith(
       color: theme.colorScheme.onPrimary,
     );
 
@@ -252,7 +249,8 @@ class FavoritesPage extends StatelessWidget {
             trailing: IconButton(
               icon: Icon(Icons.delete),
               onPressed: () async {
-                await appState.loadFavorites(); // reload favorites
+                await appState._deleteById(
+                    pair.asPascalCase); // Excluir a palavra favorita
               },
             ),
           ),
